@@ -11,8 +11,8 @@
 
 | Model                        |   Test Accuracy |   Macro F1 |   No DR Recall |   Mild DR Recall |   Moderate DR Recall |   Severe DR Recall |
 |:-----------------------------|----------------:|-----------:|---------------:|-----------------:|---------------------:|-------------------:|
-| Custom CNN (From Scratch)    |           0.25  |     0.1    |              0 |             0    |                    0 |                  1 |
-| ResNet18 (Transfer Learning) |           0.245 |     0.1008 |              0 |             0.98 |                    0 |                  0 |
+| Custom CNN (From Scratch)    |           0.75  |     0.6667 |              0 |             1    |                    1 |                  1 |
+| ResNet18 (Transfer Learning) |           0.995 |     0.995  |              1 |             0.98 |                    1 |                  1 |
 
 ---
 
