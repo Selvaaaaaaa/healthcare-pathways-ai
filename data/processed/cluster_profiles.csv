@@ -1,0 +1,4 @@
+cluster_kmeans,avg_age,avg_bmi,avg_hba1c,avg_fasting_glucose,avg_systolic_bp,avg_adherence,avg_genetic_risk,risk_rate,n_patients,cluster_label
+0,53.744,27.726,5.985,120.771,125.973,71.473,0.282,0.298,859,Low-Risk Well-Managed
+1,54.598,27.579,5.985,118.077,125.709,71.616,0.281,0.302,3301,Moderate-Risk Metabolic
+2,53.998,27.596,6.022,118.625,124.689,71.897,0.288,0.298,1840,Low-Risk Well-Managed
