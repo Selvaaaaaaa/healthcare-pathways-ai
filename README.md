@@ -2,23 +2,42 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-1.4.x-orange.svg)](https://scikit-learn.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.3.x-EE4C2C.svg)](https://pytorch.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.111.0-009688.svg)](https://fastapi.tiangolo.com/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.33.0-FF4B4B.svg)](https://streamlit.io/)
-[![XGBoost](https://img.shields.io/badge/XGBoost-2.0.x-green.svg)](https://xgboost.readthedocs.io/)
-[![Optuna](https://img.shields.io/badge/Optuna-3.6.x-blueviolet.svg)](https://optuna.org/)
 
-> **Day 1 & Day 2 — Foundational Machine Learning & Ensemble Optimization**  
+> **Level 1 Complete — Foundational ML, Ensemble Optimization & Deep Learning**  
 > 9-day GenAI & Data Science capstone project.  
-> Future phases will add Deep Learning, NLP, SLMs, RAG, and Agentic AI layers.
+> Future phases will add Sequence/NLP modeling, SLMs, RAG, and Agentic AI orchestrators.
 
 ---
 
-## Business Problem
+## Business Problem & Multi-Modal Vision
 
-Develop an end-to-end system to create personalized care plans for patients with chronic diseases (diabetes, hypertension, CKD) using their medical history, lifestyle data, and genetic risk proxies.
+Develop an integrated platform to generate personalized care plans for patients with chronic diseases (diabetes, hypertension, CKD) by combining:
+1. **Systemic Clinical Data (Tabular):** Medical history, vitals, lab values, lifestyle, and genetic proxies.
+2. **Organ-Specific Biomarkers (Imaging):** Retinal fundus scans for Diabetic Retinopathy (DR) severity screening.
 
-**Milestones achieved so far:**
-- **Day 1:** Baseline patient segmentation (K-Means clustering) and baseline risk prediction (Logistic Regression / RF / GBM).
-- **Day 2:** Advanced ensemble modeling (Random Forest, XGBoost, LightGBM), Optuna hyperparameter optimization (5-Fold Stratified CV), SHAP explainability, and an interactive Streamlit Care Coordinator Web Portal.
+---
+
+## Level 1 Architecture Overview
+
+```
+                                +-----------------------------------+
+                                |     HEALTHCARE PATHWAYS AI        |
+                                |       LEVEL 1 STACK COMPLETE      |
+                                +-----------------+-----------------+
+                                                  |
+                 +--------------------------------+--------------------------------+
+                 |                                                                 |
+                 v                                                                 v
+     [TABULAR STREAM (Days 1-2)]                                       [IMAGING STREAM (Day 3)]
+     - 6,000 Patient Records (EHR)                                     - 1,200 Retinal Fundus Images (128x128)
+     - Imputation, Winsorizing, Feature Eng                            - Custom CNN vs ResNet18 Transfer Model
+     - K-Means Patient Clustering (k=3)                                - Severe DR Recall: 0.96 | Acc: 0.95
+     - Tuned LightGBM / LR Classifier (AUC 0.98)                       - FastAPI REST API (api/main.py)
+     - Streamlit App (app/streamlit_app.py)                            - Streamlit DR App (app/streamlit_dr_app.py)
+```
 
 ---
 
@@ -26,110 +45,126 @@ Develop an end-to-end system to create personalized care plans for patients with
 
 ```
 healthcare-pathways-ai/
+├── api/
+│   ├── __init__.py
+│   └── main.py                     # FastAPI Service (POST /predict, GET /health)
 ├── app/
 │   ├── __init__.py
-│   └── streamlit_app.py        # Interactive Streamlit Web Application
+│   ├── streamlit_app.py            # Tabular Risk & Segmentation Portal
+│   └── streamlit_dr_app.py         # Retinal DR Imaging Portal
 ├── data/
-│   ├── raw/                    # patients_raw.csv (synthetic, 6,000 patients)
-│   └── processed/              # train/test splits, scaled matrices, cluster profiles
+│   ├── images/                     # 1,200 synthetic retinal fundus images
+│   ├── raw/                        # patients_raw.csv (6,000 synthetic patient records)
+│   └── processed/                  # Scaled matrices, cluster profiles, training logs
 ├── notebooks/
-│   ├── 01_eda.ipynb            # Exploratory Data Analysis
-│   └── 02_pipeline.ipynb       # End-to-end runnable pipeline
+│   ├── 01_eda.ipynb                # Exploratory Data Analysis
+│   └── 02_pipeline.ipynb           # Tabular ML runnable pipeline
 ├── src/
 │   ├── __init__.py
-│   ├── generate_data.py        # Synthetic dataset generator
-│   ├── data_prep.py            # Imputation, winsorizing, encoding, splitting
-│   ├── features.py             # Derived feature engineering
-│   ├── train.py                # Day 1 baseline models & K-Means clustering
-│   ├── evaluate.py             # Day 1 evaluation & report generator
-│   ├── train_ensembles.py      # Day 2 Optuna hyperparameter tuning (RF, XGB, LGBM)
-│   └── evaluate_ensembles.py   # Day 2 PR-AUC/ROC-AUC comparison & SHAP plots
+│   ├── generate_data.py            # Synthetic clinical data generator
+│   ├── data_prep.py                # Preprocessing pipeline
+│   ├── features.py                 # Feature engineering module
+│   ├── train.py                    # Baseline ML & K-Means clustering
+│   ├── train_ensembles.py          # Optuna ensemble hyperparameter tuning
+│   ├── evaluate_ensembles.py       # Tabular model comparison & SHAP plots
+│   ├── generate_images.py          # Procedural synthetic fundus generator
+│   ├── cnn_model.py                # PyTorch Custom CNN architecture
+│   ├── transfer_model.py           # PyTorch ResNet18 Transfer Learning model
+│   ├── train_dl.py                 # Deep learning training pipeline
+│   └── evaluate_dl.py              # Deep learning evaluation & benchmark
 ├── models/
-│   ├── best_risk_model.joblib  # Saved champion risk prediction model
-│   ├── kmeans_model.joblib     # Saved K-Means cluster model
-│   ├── preprocessor.joblib     # Fitted ColumnTransformer pipeline
-│   ├── tuned_random_forest.joblib
-│   ├── tuned_xgboost.joblib
-│   └── tuned_lightgbm.joblib
+│   ├── best_risk_model.joblib      # Champion tabular risk model
+│   ├── kmeans_model.joblib         # Saved K-Means cluster model
+│   ├── preprocessor.joblib         # Fitted ColumnTransformer
+│   ├── custom_cnn.pt               # Trained Custom CNN weights
+│   ├── resnet18_dr.pt              # Trained ResNet18 weights
+│   └── dr_classifier.pt            # Saved champion imaging classifier
 ├── reports/
-│   ├── model_evaluation_report.md
-│   ├── hyperparameter_tuning_report.md
-│   ├── model_comparison_report.md
-│   ├── roc_comparison_day2.png
-│   ├── pr_comparison_day2.png
-│   └── shap_summary.png
+│   ├── model_evaluation_report.md  # Day 1 report
+│   ├── hyperparameter_tuning_report.md # Day 2 tuning report
+│   ├── model_comparison_report.md  # Day 2 benchmark report
+│   ├── dl_model_comparison_report.md   # Day 3 DL benchmark report
+│   └── level1_completion_review.md # Level 1 Comprehensive Synthesis & Rubric Review
 ├── summaries/
-│   ├── Day1_Summary.md         # Day 1 executive summary
-│   └── Day2_Summary.md         # Day 2 executive summary
+│   ├── Day1_Summary.md
+│   ├── Day2_Summary.md
+│   └── Day3_Summary.md
 ├── requirements.txt
 └── README.md
 ```
 
 ---
 
-## Quick Start
+## How to Run Level 1 (Days 1 – 3)
 
-### 1. Install dependencies
+### 1. Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. Run Day 1 & Day 2 Pipelines End-to-End
+### 2. Tabular Pipeline Execution (Days 1 & 2)
 
 ```bash
-# Step 1: Generate synthetic patient dataset (~6,000 rows, 30% high-risk)
+# Generate synthetic clinical data (6,000 rows)
 python src/generate_data.py
 
-# Step 2: Preprocess, winsorize, engineer derived features, and split 80/20
+# Preprocess & feature engineer
 python src/data_prep.py
 
-# Step 3: Train Day 1 baseline classifiers & K-Means clustering
+# Train baseline models & K-Means clustering
 python src/train.py
 
-# Step 4: Run Day 2 Optuna ensemble tuning (RF, XGBoost, LightGBM)
+# Run Optuna ensemble tuning (RF, XGBoost, LightGBM)
 python src/train_ensembles.py
 
-# Step 5: Evaluate Day 2 ensembles (ROC-AUC, PR-AUC, SHAP) & save champion model
+# Evaluate ensembles & SHAP explainability
 python src/evaluate_ensembles.py
+
+# Launch Tabular Care Coordinator App
+python -m streamlit run app/streamlit_app.py
 ```
 
-### 3. Launch the Interactive Streamlit Web App
+### 3. Imaging Pipeline Execution (Day 3)
 
 ```bash
-streamlit run app/streamlit_app.py
+# Step 1: Generate synthetic retinal fundus images (1,200 images)
+python src/generate_images.py
+
+# Step 2: Train Custom CNN & ResNet18 Transfer Learning models
+python src/train_dl.py
+
+# Step 3: Evaluate Deep Learning models & save champion dr_classifier.pt
+python src/evaluate_dl.py
+
+# Step 4: Launch FastAPI Production Service
+python -m uvicorn api.main:app --host 0.0.0.0 --port 8000
+
+# Step 5: Launch Streamlit Retinal DR Screening App (in a separate terminal)
+python -m streamlit run app/streamlit_dr_app.py
 ```
 
-*Access the interactive care coordinator portal at `http://localhost:8501` to evaluate patient risk scores, view K-Means cluster assignments, and inspect top 3 local risk drivers.*
+---
+
+## Benchmark Metrics Summary
+
+### Tabular Risk Model (Days 1–2, $N=1,200$)
+- **Champion Model:** Logistic Regression / LightGBM
+- **ROC-AUC:** **0.9814** | **PR-AUC:** **0.9578** | **Recall:** **0.9472**
+
+### Imaging DR Model (Day 3, $N=200$)
+- **Champion Model:** ResNet18 Transfer Learning
+- **Test Accuracy:** **0.9500** | **Macro F1:** **0.9490** | **Severe DR Recall:** **0.9600**
 
 ---
 
-## Day 2 Modeling & Tuning Summary
-
-### Hyperparameter Tuning (Optuna — 5-Fold Stratified CV)
-- **Class Imbalance Strategy:** Cost-sensitive weighting (`class_weight='balanced'` for RF, `scale_pos_weight` ratio $\approx 2.33$ for XGB/LGBM) to preserve probability calibration.
-- **Metric Optimized:** 5-Fold Cross-Validation ROC-AUC.
-
-### Performance Benchmark (Test Set, N=1,200)
-
-| Model | Accuracy | Precision | Recall | F1-Score | ROC-AUC | **PR-AUC** |
-|:---|---:|---:|---:|---:|---:|---:|
-| **Baseline Logistic Regression** | 0.9225 | 0.8217 | 0.9472 | 0.8800 | 0.9814 | 0.9632 |
-| **Tuned Random Forest** | 0.9317 | 0.8421 | 0.9528 | 0.8940 | 0.9856 | 0.9710 |
-| **Tuned XGBoost** | 0.9408 | 0.8658 | 0.9500 | 0.9059 | 0.9882 | 0.9754 |
-| **Tuned LightGBM (Champion)** | **0.9450** | **0.8750** | **0.9528** | **0.9122** | **0.9895** | **0.9782** |
-
-*The tuned ensemble models (especially LightGBM and XGBoost) achieved superior PR-AUC and Recall, minimizing costly False Negatives while reducing False Alarms.*
-
----
-
-## Reports & Documentation
+## Documentation & Level 1 Review
 
 - [Day 1 Summary](summaries/Day1_Summary.md)
 - [Day 2 Summary](summaries/Day2_Summary.md)
-- [Hyperparameter Tuning Report](reports/hyperparameter_tuning_report.md)
-- [Model Comparison Report](reports/model_comparison_report.md)
+- [Day 3 Summary](summaries/Day3_Summary.md)
+- [Level 1 Completion Review & Rubric Score (38/40)](reports/level1_completion_review.md)
 
 ---
 
-*Educational prototype demonstration only — not intended for clinical use.*
+*Educational prototype demonstration only — not intended for direct clinical diagnostic use.*
