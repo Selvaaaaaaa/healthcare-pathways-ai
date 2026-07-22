@@ -26,12 +26,18 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import torch
+import torch.nn.functional as F
+from torchvision import transforms
 import streamlit as st
 
 # Add project root to sys.path
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
+
+from src.transfer_model import build_transfer_resnet18
+from src.cnn_model import CustomRetinalCNN
 
 st.set_page_config(
     page_title="Healthcare Pathways AI — Retinal DR Screening",
@@ -92,12 +98,6 @@ st.markdown(
 
 def run_direct_inference(image: Image.Image):
     """Fallback in-process inference if FastAPI server is offline."""
-    import torch
-    import torch.nn.functional as F
-    from torchvision import transforms
-    from src.transfer_model import build_transfer_resnet18
-    from src.cnn_model import CustomRetinalCNN
-
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     models_dir = os.path.join(ROOT, "models")
     champion_path = os.path.join(models_dir, "dr_classifier.pt")
