@@ -84,7 +84,7 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_allowed_html=True,
+    unsafe_allow_html=True,
 )
 
 
@@ -186,7 +186,7 @@ def main():
     if selected_image is not None:
         with col_left:
             st.subheader("🖼️ Retinal Fundus Image View")
-            st.image(selected_image, use_column_width=True, caption=f"Selected Image: {image_name}")
+            st.image(selected_image, use_container_width=True, caption=f"Selected Image: {image_name}")
 
         with col_right:
             st.subheader("🩺 Diagnostic Screening Results")
